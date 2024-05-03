@@ -1,4 +1,5 @@
 const response = require("express").response;
+const path = require("path");
 const Project = require("../models/project");
 const fs = require("fs");
 
@@ -27,7 +28,7 @@ const projectController = {
 
             return res.status(200).json({
                 ok: true,
-                project
+                data: project
             });
         } catch (error) {
             console.error(error);
@@ -48,7 +49,7 @@ const projectController = {
     
             return res.status(200).json({
                 ok: true,
-                project
+                data: project
             });
         } catch (error) {
             return res.status(500).json({
@@ -71,7 +72,7 @@ const projectController = {
     
             return res.status(200).json({
                 ok: true,
-                projects
+                data: projects
             });
         } catch (error) {
             return res.status(500).json({
@@ -98,7 +99,7 @@ const projectController = {
 
             return res.status(200).json({
                 ok: true,
-                projectUpdated
+                data: projectUpdated
             });
             
         } catch (error) {
@@ -125,7 +126,7 @@ const projectController = {
 
             return res.status(200).json({
                 ok: true,
-                message: "Project deleted correctly"
+                data: "Project delted successfuly"
             });
             
         } catch (error) {
@@ -164,7 +165,7 @@ const projectController = {
             
                         return res.status(200).json({
                             ok: true,
-                            project: projectUpdated
+                            data: projectUpdated
                         });
                 
                     default:
@@ -176,7 +177,7 @@ const projectController = {
                         });
                 }
             }else{
-                return res.status(200).json({
+                return res.status(400).json({
                     ok: false,
                     message: "There is not files"
                 });
@@ -185,6 +186,19 @@ const projectController = {
             return res.status(500).json({
                 ok: false,
                 error: "Internal server error"
+            });
+        }
+    },
+    async getImageFile(req, res){
+        let file = req.params.image;
+        let pathFile = `./uploads/${file}`;
+    
+        if (fs.existsSync(pathFile)) {
+            return res.sendFile(path.resolve(pathFile));
+        } else {
+            return res.status(404).json({
+                ok: false,
+                data: "Image not found"
             });
         }
     }
